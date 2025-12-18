@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -6,29 +7,84 @@ import { BudgetChart } from './components/BudgetChart';
 import { BudgetTable } from './components/BudgetTable';
 import { RKAKLTable } from './components/RKAKLTable';
 import { UserTable } from './components/UserTable';
-import { BSCStrategic } from './components/BSCStrategic'; // Import New Component
+import { BSCStrategic } from './components/BSCStrategic'; 
+import { VisiMisi } from './components/VisiMisi';
+import { TujuanStrategis } from './components/TujuanStrategis';
+import { SasaranStrategis } from './components/SasaranStrategis';
+import { IndikatorIKU } from './components/IndikatorIKU';
+import { RiskManagement } from './components/RiskManagement'; 
+import { StrategyMap } from './components/StrategyMap'; 
+import { AppStatistics } from './components/AppStatistics'; 
+import { RPDManagement } from './components/RPDManagement'; // New Import
 import { BudgetFormModal } from './components/BudgetFormModal';
+import { RoleMatrix } from './components/RoleMatrix';
+import { UnitManagement } from './components/UnitManagement';
+import { PaguManagement } from './components/PaguManagement';
+import { TahunAnggaran } from './components/TahunAnggaran';
+import { ReviewManagement } from './components/ReviewManagement';
+import { MonitoringDashboard } from './components/MonitoringDashboard';
+import { BeStrongProgram } from './components/BeStrongProgram';
 import { MOCK_DATA, MOCK_RKAKL_DATA, MOCK_USERS } from './constants';
-import { DollarSign, FileInput, PieChart, Activity, Plus, Table2, LayoutDashboard, UserPlus, Target } from 'lucide-react';
+import { DollarSign, FileInput, PieChart, Activity, Plus, Table2, UserPlus, Target, ShieldCheck, Building2, Calendar, CheckSquare, RefreshCw, Wallet, Map } from 'lucide-react';
 
 const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Default view is dashboard, but can be 'rkakl', 'manage-user', 'bsc-strategic'
   const [currentView, setCurrentView] = useState<string>('dashboard');
   
   const totalPagu = "428.2 M";
   const totalUsulan = "428.2 M";
 
+  const isBscView = [
+    'bsc-strategic', 
+    'visi-misi', 
+    'tujuan-strategis', 
+    'sasaran-strategis', 
+    'indikator-iku', 
+    'program-bestrong',
+    'manajemen-risiko',
+    'peta-strategis'
+  ].includes(currentView);
+
   const renderContent = () => {
     switch(currentView) {
       case 'manage-user':
         return <UserTable data={MOCK_USERS} />;
+      case 'manage-role':
+        return <RoleMatrix />;
+      case 'stats-card': 
+        return <AppStatistics />;
+      case 'manage-unit':
+        return <UnitManagement />;
+      case 'manage-pagu':
+        return <PaguManagement />;
+      case 'tahun-anggaran':
+        return <TahunAnggaran />;
+      case 'review':
+        return <ReviewManagement />;
+      case 'monitoring':
+        return <MonitoringDashboard />;
+      case 'rpd': // New Case
+        return <RPDManagement />;
       case 'rkakl':
         return (
            <div className="h-[calc(100vh-180px)]">
              <RKAKLTable data={MOCK_RKAKL_DATA} />
            </div>
         );
+      case 'visi-misi':
+        return <VisiMisi />;
+      case 'tujuan-strategis':
+        return <TujuanStrategis />;
+      case 'sasaran-strategis':
+        return <SasaranStrategis />;
+      case 'indikator-iku':
+        return <IndikatorIKU />; 
+      case 'program-bestrong':
+        return <BeStrongProgram />;
+      case 'manajemen-risiko':
+        return <RiskManagement />;
+      case 'peta-strategis': 
+        return <StrategyMap />;
       case 'bsc-strategic':
         return <BSCStrategic />;
       case 'dashboard':
@@ -55,12 +111,30 @@ const App: React.FC = () => {
   };
 
   const getPageTitle = () => {
-    switch(currentView) {
-      case 'manage-user': return 'Manajemen User';
-      case 'rkakl': return 'Input RKAKL';
-      case 'bsc-strategic': return 'Renstra BSC Manager';
-      default: return 'Dashboard Anggaran';
+    if (currentView === 'manage-user') return 'Manajemen User';
+    if (currentView === 'manage-role') return 'Konfigurasi Role & Hak Akses';
+    if (currentView === 'stats-card') return 'Statistik Aplikasi';
+    if (currentView === 'manage-unit') return 'Manajemen Struktur Unit Kerja';
+    if (currentView === 'manage-pagu') return 'Alokasi Pagu Anggaran';
+    if (currentView === 'tahun-anggaran') return 'Pengaturan Tahun Anggaran';
+    if (currentView === 'review') return 'Manajemen Review Usulan';
+    if (currentView === 'monitoring') return 'Monitoring & Evaluasi Terpadu';
+    if (currentView === 'rpd') return 'Rencana Penarikan Dana (RPD)'; // New Title
+    if (currentView === 'rkakl') return 'Input RKAKL';
+    if (isBscView) {
+      const titles: Record<string, string> = {
+        'visi-misi': 'Visi & Misi Universitas',
+        'tujuan-strategis': 'Tujuan Strategis (Renstra)',
+        'sasaran-strategis': 'Sasaran Strategis (CSF)',
+        'indikator-iku': 'Indikator Kinerja Utama (IKU)',
+        'program-bestrong': 'Program Kerja BE STRONG',
+        'manajemen-risiko': 'Manajemen Risiko Strategis',
+        'peta-strategis': 'Peta Strategis (Strategy Map)',
+        'bsc-strategic': 'Dashboard BSC Strategic'
+      };
+      return titles[currentView] || 'Dashboard BSC';
     }
+    return 'Dashboard Anggaran';
   };
   
   return (
@@ -70,17 +144,15 @@ const App: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0">
         <Header />
         
-        <main className="flex-1 overflow-y-auto p-6 scroll-smooth">
+        <main className={`flex-1 overflow-y-auto p-6 scroll-smooth ${isBscView ? 'bg-[#0f172a]' : ''}`}>
           <div className="max-w-7xl mx-auto space-y-6">
             
-            {/* Page Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900">{getPageTitle()}</h1>
+                <div className={isBscView && currentView === 'bsc-strategic' ? 'hidden' : ''}>
+                    <h1 className={`text-2xl font-bold ${isBscView ? 'text-white' : 'text-slate-900'}`}>{getPageTitle()}</h1>
                     <p className="text-slate-500 mt-1">Tahun Anggaran 2025</p>
                 </div>
-                <div className="flex items-center gap-3">
-                    {/* View Switcher for Demo Purposes (Optional since we have Sidebar now) */}
+                <div className="flex items-center gap-3 ml-auto">
                     {currentView === 'dashboard' && (
                        <button 
                          onClick={() => setCurrentView('rkakl')}
@@ -99,43 +171,98 @@ const App: React.FC = () => {
                     
                     {currentView === 'dashboard' && (
                         <button 
-                        onClick={() => setIsModalOpen(true)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm shadow-md shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95"
+                          onClick={() => setIsModalOpen(true)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-blue-600/30 flex items-center gap-2 transition-all active:scale-95 hover:translate-y-[-1px]"
                         >
-                        <Plus size={18} />
-                        Tambah Pagu
+                          <Plus size={20} className="stroke-[3px]" />
+                          Tambah Pagu
+                        </button>
+                    )}
+
+                    {currentView === 'manage-pagu' && (
+                        <button 
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg shadow-indigo-600/20 flex items-center gap-2 transition-all active:scale-95"
+                        >
+                          <Wallet size={18} />
+                          Simpan Distribusi
+                        </button>
+                    )}
+
+                    {currentView === 'review' && (
+                        <button 
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg shadow-emerald-600/20 flex items-center gap-2 transition-all active:scale-95"
+                        >
+                          <CheckSquare size={18} />
+                          Finalisasi Semua Review
+                        </button>
+                    )}
+
+                    {currentView === 'monitoring' && (
+                        <button 
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg shadow-indigo-600/20 flex items-center gap-2 transition-all active:scale-95"
+                        >
+                          <RefreshCw size={18} />
+                          Refresh Data Live
+                        </button>
+                    )}
+
+                    {currentView === 'tahun-anggaran' && (
+                        <button 
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg shadow-indigo-600/20 flex items-center gap-2 transition-all active:scale-95"
+                        >
+                          <Calendar size={18} />
+                          Salin Data TA Sebelumnya
+                        </button>
+                    )}
+
+                    {currentView === 'manage-role' && (
+                        <button 
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg shadow-emerald-600/20 flex items-center gap-2 transition-all active:scale-95"
+                        >
+                          <ShieldCheck size={18} />
+                          Simpan Konfigurasi RBAC
+                        </button>
+                    )}
+
+                    {currentView === 'manage-unit' && (
+                        <button 
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-lg shadow-indigo-600/20 flex items-center gap-2 transition-all active:scale-95"
+                        >
+                          <Building2 size={18} />
+                          Sinkronisasi Unit (SIAKAD)
                         </button>
                     )}
                     
-                    {currentView === 'bsc-strategic' && (
+                    {isBscView && (
                         <button 
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm shadow-md shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95"
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm shadow-md shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95"
                         >
-                        <Target size={18} />
-                        Buat Sasaran Baru
+                          <Target size={18} />
+                          Update Data
                         </button>
                     )}
 
                     {currentView === 'manage-user' && (
                         <button 
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm shadow-md shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95"
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm shadow-md shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95"
                         >
-                        <UserPlus size={18} />
-                        Add New User
+                          <UserPlus size={18} />
+                          Add New User
                         </button>
                     )}
                 </div>
             </div>
 
-            {/* Content Render */}
             {renderContent()}
 
           </div>
         </main>
       </div>
 
-      {/* Render Modal */}
-      <BudgetFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <BudgetFormModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 };
