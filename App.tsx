@@ -5,14 +5,15 @@ import { StatsCard } from './components/StatsCard';
 import { BudgetChart } from './components/BudgetChart';
 import { BudgetTable } from './components/BudgetTable';
 import { RKAKLTable } from './components/RKAKLTable';
-import { UserTable } from './components/UserTable'; // Import UserTable
+import { UserTable } from './components/UserTable';
+import { BSCStrategic } from './components/BSCStrategic'; // Import New Component
 import { BudgetFormModal } from './components/BudgetFormModal';
 import { MOCK_DATA, MOCK_RKAKL_DATA, MOCK_USERS } from './constants';
-import { DollarSign, FileInput, PieChart, Activity, Plus, Table2, LayoutDashboard, UserPlus } from 'lucide-react';
+import { DollarSign, FileInput, PieChart, Activity, Plus, Table2, LayoutDashboard, UserPlus, Target } from 'lucide-react';
 
 const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Default view is dashboard, but can be 'rkakl' or 'manage-user'
+  // Default view is dashboard, but can be 'rkakl', 'manage-user', 'bsc-strategic'
   const [currentView, setCurrentView] = useState<string>('dashboard');
   
   const totalPagu = "428.2 M";
@@ -28,6 +29,8 @@ const App: React.FC = () => {
              <RKAKLTable data={MOCK_RKAKL_DATA} />
            </div>
         );
+      case 'bsc-strategic':
+        return <BSCStrategic />;
       case 'dashboard':
       default:
         return (
@@ -55,6 +58,7 @@ const App: React.FC = () => {
     switch(currentView) {
       case 'manage-user': return 'Manajemen User';
       case 'rkakl': return 'Input RKAKL';
+      case 'bsc-strategic': return 'Renstra BSC Manager';
       default: return 'Dashboard Anggaran';
     }
   };
@@ -100,6 +104,15 @@ const App: React.FC = () => {
                         >
                         <Plus size={18} />
                         Tambah Pagu
+                        </button>
+                    )}
+                    
+                    {currentView === 'bsc-strategic' && (
+                        <button 
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm shadow-md shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95"
+                        >
+                        <Target size={18} />
+                        Buat Sasaran Baru
                         </button>
                     )}
 

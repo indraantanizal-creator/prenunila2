@@ -46,3 +46,21 @@ export interface User {
   jabatan: string;
   status: 'active' | 'inactive';
 }
+
+// New Types for BSC Module
+export interface BSCPerspective {
+  id: string;
+  name: string;
+  targetCount: number;
+  achievement: number; // 0-100
+  color: string;
+}
+
+export interface BSCActivity {
+  id: number;
+  user: string;
+  action: string;
+  target: string;
+  time: string;
+  type: 'create' | 'update' | 'delete' | 'review';
+}
